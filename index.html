@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspire English - AI Pronunciation Fix</title>
+    <style>
+        * { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; }
+        body { background-color: #fff5f5; padding: 20px; color: #2d3748; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(229, 62, 62, 0.1); }
+        
+        .header { text-align: center; border-bottom: 3px dashed #fc8181; margin-bottom: 25px; padding-bottom: 15px; }
+        .header h1 { color: #c53030; margin: 0; font-size: 34px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;}
+        .header p { color: #e53e3e; font-size: 18px; font-weight: 600; margin-top: 5px; }
+        
+        .setup-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; background: #fed7d7; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #feb2b2; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #9b2c2c; font-size: 15px; }
+        select, input, textarea { width: 100%; padding: 12px; border: 2px solid #fff; border-radius: 8px; font-size: 16px; outline: none; transition: 0.3s; }
+        select:focus, textarea:focus { border-color: #fc8181; box-shadow: 0 0 5px rgba(252, 129, 129, 0.5); }
+
+        .main-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
+        .card { background: #fff; border: 1px solid #fed7d7; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        
+        /* Mic Zone */
+        .mic-card { text-align: center; border: 3px solid #fc8181; background: #fffaf0; position: relative; }
+        .mic-card h3 { color: #c53030; margin-top: 0; }
+        #wordDisplay { font-size: 36px; font-weight: bold; color: #2d3748; margin: 20px 0; display: block; padding-bottom: 15px; border-bottom: 2px dashed #e2e8f0; line-height: 1.4; }
+        
+        .score-box { font-size: 65px; font-weight: 900; color: #38a169; margin: 15px 0; min-height: 80px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        
+        .btn { padding: 16px 25px; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 18px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-mic { background: linear-gradient(135deg, #f56565, #c53030); color: white; width: 250px; }
+        .btn-mic:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(229, 62, 62, 0.3); }
+        .btn-mic.listening { background: #ecc94b; color: #744210; animation: pulse 1.5s infinite; }
+        
+        .btn-save { background: linear-gradient(135deg, #48bb78, #2f855a); color: white; width: 100%; margin-top: 20px; }
+        .btn-save:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(72, 187, 120, 0.3); }
+        .btn-save:disabled { background: #cbd5e0; cursor: not-allowed; box-shadow: none; transform: none; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 35px; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #fed7d7; padding: 14px; text-align: left; }
+        th { background: #e53e3e; color: white; font-weight: 600; text-transform: uppercase; font-size: 14px; }
+        tr:nth-child(even) { background: #fff5f5; }
+        tr:hover { background: #fed7d7; transition: 0.2s; }
+
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(236, 201, 75, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(236, 201, 75, 0); } 100% { box-shadow: 0 0 0 0 rgba(236, 201, 75, 0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🌟 INSPIRE ENGLISH CENTER 🌟</h1>
+        <p>Hệ Thống Luyện Phát Âm Dành Cho LỚP CAMPATH 3  - Mr. Bằng</p>
+    </div>
+
+    <div class="setup-area">
+        <div>
+            <label>👤 Học Sinh:</label>
+            <select id="studentName">
+                <option>NICK</option><option>HERI</option><option>KATE</option>
+                <option>HENRY</option><option>KELVIN</option><option>DORA</option><option>JACKSON</option>
+            </select>
+        </div>
+        <div>
+            <label> Bài Học:</label>
+            <select id="unitSelect" onchange="loadVocab()">
+                <option value="">-- Chọn Unit --</option>
+                <option value="6">Unit 6: Community Services</option>
+                <option value="7">Unit 7: Movies</option>
+                <option value="8">Unit 8: The World Around Us</option>
+                <option value="9">Unit 9: Houses In The Future</option>
+                <option value="10">Unit 10: Cities Around The World</option>
+            </select>
+        </div>
+        <div>
+            <label>Từ Vựng / Câu (Sentences):</label>
+            <select id="wordSelect" onchange="updateTarget()"></select>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="card mic-card">
+            <h3>🎙️ KHU VỰC LUYỆN NÓI</h3>
+            <span id="wordDisplay">Vui lòng chọn bài học...</span>
+            <button class="btn btn-mic" id="btnMic">🔴 Chạm Để Nói</button>
+            <div id="resultArea">
+                <p style="margin-top:20px; font-size: 18px;">AI nghe được: <br><b id="heardTxt" style="color:#e53e3e; font-size: 22px;">---</b></p>
+                <div class="score-box"><span id="scoreVal">--</span><span style="font-size: 35px;">%</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="color: #c53030; margin-top: 0;">📝 Nhật Ký Của Giáo Viên</h3>
+            <textarea id="teacherNote" rows="5" placeholder="Ví dụ: Học sinh đọc thiếu âm đuôi (ending sound) 's', cần chú ý nối âm..."></textarea>
+            <button class="btn btn-save" id="btnSave" disabled onclick="saveData()">💾 LƯU KẾT QUẢ VÀO SỔ</button>
+            <p id="saveHint" style="font-size:13px; color:#e53e3e; margin-top:10px; text-align:center; font-weight: bold;">(Học sinh cần đọc để có điểm trước khi lưu!)</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Học sinh</th>
+                <th>Nội dung luyện tập</th>
+                <th>Điểm AI</th>
+                <th>Nhận xét của GV</th>
+                <th>Thời gian</th>
+            </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+    </table>
+    <button class="btn" style="background:#2b6cb0; color:white; margin-top:20px; width: 100%; border-radius: 8px;" onclick="exportData()">📊 XUẤT BÁO CÁO CSV (Dành cho Phụ Huynh)</button>
+</div>
+
+<script>
+    // Đã thêm rất nhiều từ vựng và CÂU HOÀN CHỈNH vào từng Unit
+    const vocabulary = {
+        "6": [
+            "[TỪ] Police station", "[TỪ] Post office", "[TỪ] Charity organization", "[TỪ] Volunteer", "[TỪ] Donate blood",
+            "[CÂU] I want to volunteer at the local charity.",
+            "[CÂU] The fire station is next to the hospital.",
+            "[CÂU] We should donate clothes to poor children.",
+            "[CÂU] Can you show me the way to the post office?"
+        ],
+        "7": [
+            "[TỪ] Science fiction", "[TỪ] Blockbuster", "[TỪ] Special effects", "[TỪ] Documentary", "[TỪ] Main character",
+            "[CÂU] My favorite movie genre is science fiction.",
+            "[CÂU] The special effects in this film are fantastic.",
+            "[CÂU] Let's go to the cinema to watch a comedy.",
+            "[CÂU] That blockbuster movie broke all box office records."
+        ],
+        "8": [
+            "[TỪ] National park", "[TỪ] Sleeping bag", "[TỪ] Flashlight", "[TỪ] Environment", "[TỪ] Explore",
+            "[CÂU] We are going camping in the national park.",
+            "[CÂU] Don't forget to bring your sleeping bag and flashlight.",
+            "[CÂU] We must work together to protect the environment.",
+            "[CÂU] There is a beautiful waterfall hidden in the forest."
+        ],
+        "9": [
+            "[TỪ] Eco-friendly", "[TỪ] Solar panel", "[TỪ] Space station", "[TỪ] Automatic", "[TỪ] Smart home",
+            "[CÂU] In the future, houses will be powered by solar energy.",
+            "[CÂU] My smart home can automatically control the temperature.",
+            "[CÂU] Astronauts wear spacesuits to survive in space.",
+            "[CÂU] Eco-friendly houses are good for our planet."
+        ],
+        "10": [
+            "[TỪ] Skyscraper", "[TỪ] Public transport", "[TỪ] Amusement park", "[TỪ] Traffic jam", "[TỪ] Architecture",
+            "[CÂU] New York is famous for its tall skyscrapers.",
+            "[CÂU] Public transport is very convenient in this city.",
+            "[CÂU] We spent the whole day playing at the amusement park.",
+            "[CÂU] The traffic jam made me late for school today."
+        ]
+    };
+
+    function loadVocab() {
+        const u = document.getElementById('unitSelect').value;
+        const s = document.getElementById('wordSelect');
+        s.innerHTML = vocabulary[u] ? vocabulary[u].map(w => `<option value="${w}">${w}</option>`).join('') : "";
+        updateTarget();
+    }
+
+    function updateTarget() {
+        let selectedText = document.getElementById('wordSelect').value || "Vui lòng chọn bài học...";
+        // Bỏ chữ [TỪ] hoặc [CÂU] đi khi hiển thị cho đẹp
+        selectedText = selectedText.replace(/\[TỪ\] |\[CÂU\] /g, "");
+        document.getElementById('wordDisplay').innerText = selectedText;
+        resetScore();
+    }
+
+    function resetScore() {
+        document.getElementById('scoreVal').innerText = "--";
+        document.getElementById('scoreVal').style.color = "#38a169";
+        document.getElementById('heardTxt').innerText = "---";
+        document.getElementById('btnSave').disabled = true;
+        document.getElementById('saveHint').style.display = "block";
+    }
+
+    // Cấu hình AI Speech
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    
+    document.getElementById('btnMic').onclick = () => {
+        try {
+            recognition.start();
+            document.getElementById('btnMic').innerText = "🎧 Đang nghe...";
+            document.getElementById('btnMic').classList.add('listening');
+        } catch(e) {
+            console.log("Mic đang chạy rồi!");
+        }
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase().trim();
+        const confidence = event.results[0][0].confidence;
+        
+        let targetText = document.getElementById('wordDisplay').innerText.toLowerCase();
+        
+        // Loại bỏ dấu câu để so sánh chuẩn hơn
+        const cleanTranscript = transcript.replace(/[.,!?]/g, '');
+        const cleanTarget = targetText.replace(/[.,!?]/g, '');
+
+        document.getElementById('heardTxt').innerText = transcript;
+        
+        // Thuật toán chấm điểm câu: Đếm số từ đúng
+        const targetWords = cleanTarget.split(' ');
+        const transcriptWords = cleanTranscript.split(' ');
+        
+        let matchCount = 0;
+        targetWords.forEach(word => {
+            if(transcriptWords.includes(word)) {
+                matchCount++;
+            }
+        });
+
+        // Tính % số từ phát âm đúng
+        let wordMatchScore = (matchCount / targetWords.length) * 100;
+        
+        // Kết hợp độ chính xác của số từ (70%) và độ tự tin của AI (30%)
+        let score = Math.round((wordMatchScore * 0.7) + (confidence * 100 * 0.3));
+        
+        // Thưởng điểm nếu đọc đúng y chang toàn bộ câu/từ
+        if (cleanTranscript === cleanTarget) {
+            score = 100;
+        }
+
+        // Chống lỗi điểm vượt 100 hoặc âm
+        if (score > 100) score = 100;
+        if (score < 10) score = Math.floor(Math.random() * (40 - 20 + 1)) + 20; // Khuyến khích HS dù đọc sai
+
+        // Đổi màu điểm số
+        const scoreElement = document.getElementById('scoreVal');
+        scoreElement.innerText = score;
+        if(score >= 80) scoreElement.style.color = "#38a169"; // Xanh
+        else if(score >= 50) scoreElement.style.color = "#d69e2e"; // Vàng
+        else scoreElement.style.color = "#e53e3e"; // Đỏ
+
+        document.getElementById('btnSave').disabled = false;
+        document.getElementById('saveHint').style.display = "none";
+        
+        document.getElementById('btnMic').innerText = "🔴 Thử lại lần nữa";
+        document.getElementById('btnMic').classList.remove('listening');
+    };
+
+    recognition.onerror = (event) => {
+        alert("Lỗi Micro: " + event.error + ". Hãy đảm bảo đã cấp quyền Micro trên trình duyệt!");
+        document.getElementById('btnMic').innerText = "🔴 Bắt đầu nói";
+        document.getElementById('btnMic').classList.remove('listening');
+    };
+
+    // Quản lý Dữ liệu
+    let logs = JSON.parse(localStorage.getItem('inspire_final')) || [];
+
+    function saveData() {
+        const entry = {
+            name: document.getElementById('studentName').value,
+            lesson: document.getElementById('wordDisplay').innerText,
+            score: document.getElementById('scoreVal').innerText + "%",
+            note: document.getElementById('teacherNote').value || "Tốt",
+            time: new Date().toLocaleString('vi-VN')
+        };
+        logs.unshift(entry);
+        localStorage.setItem('inspire_final', JSON.stringify(logs));
+        renderTable();
+        
+        // Cảnh báo thân thiện
+        alert("🎉 Đã lưu kết quả của " + entry.name + " thành công!");
+        
+        // Xoá note cũ đi để chuẩn bị cho từ tiếp theo
+        document.getElementById('teacherNote').value = "";
+        resetScore();
+    }
+
+    function renderTable() {
+        document.getElementById('logBody').innerHTML = logs.map(l => `
+            <tr>
+                <td><strong>${l.name}</strong></td>
+                <td>${l.lesson}</td>
+                <td style="color:${parseInt(l.score) >= 80 ? '#38a169' : parseInt(l.score) >= 50 ? '#d69e2e' : '#e53e3e'}; font-weight:bold; font-size:18px;">${l.score}</td>
+                <td><i>${l.note}</i></td>
+                <td style="font-size: 13px; color: #718096;">${l.time}</td>
+            </tr>
+        `).join('');
+    }
+
+    function exportData() {
+        let csv = "\uFEFFHọc sinh,Nội dung luyện tập,Điểm AI,Nhận xét,Thời gian\n";
+        logs.forEach(l => csv += `"${l.name}","${l.lesson}","${l.score}","${l.note}","${l.time}"\n`);
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "Bao_Cao_Phat_Am_Inspire.csv";
+        a.click();
+    }
+
+    window.onload = () => {
+        renderTable();
+        // Load sẵn unit 6 nếu muốn
+        // document.getElementById('unitSelect').value = "6";
+        // loadVocab();
+    };
+</script>
+
+</body>
+</html>
