@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inspire English (Red Edition)</title>
+    <title>Inspire English - AI Pronunciation Pro (Red Edition)</title>
     <style>
         /* CSS ĐÃ CHUYỂN SANG TÔNG ĐỎ */
         * { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; }
@@ -387,6 +387,9 @@
         localStorage.setItem('inspire_pro_red_logs', JSON.stringify(logs));
         renderTable();
         alert("Đã lưu kết quả của " + entry.name);
+        
+        // --- TÍNH NĂNG MỚI: Tự động làm mới trang ---
+        window.location.reload(); 
     }
 
     function renderTable() {
@@ -412,6 +415,9 @@
         link.href = URL.createObjectURL(blob);
         link.download = "Bao_Cao_Phat_Am_Campath3.csv";
         link.click();
+        
+        // --- TÍNH NĂNG MỚI: Tự động làm mới trang sau khi tải xuống 1 giây ---
+        setTimeout(() => { window.location.reload(); }, 1000);
     }
 
     window.onload = renderTable;
