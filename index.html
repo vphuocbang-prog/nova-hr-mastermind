@@ -1,427 +1,939 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Inspire English (Red Edition)</title>
-    <style>
-        /* CSS ĐÃ CHUYỂN SANG TÔNG ĐỎ */
-        * { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-sizing: border-box; }
-        body { background-color: #fff5f5; padding: 20px; color: #2d3748; margin: 0; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 35px; border-radius: 20px; box-shadow: 0 15px 35px rgba(155, 44, 44, 0.1); }
-        
-        .header { text-align: center; border-bottom: 3px dashed #feb2b2; margin-bottom: 30px; padding-bottom: 20px; }
-        .header h1 { color: #c53030; margin: 0; font-size: 38px; font-weight: 900; letter-spacing: 1.5px;}
-        .header p { color: #742a2a; font-size: 18px; font-weight: 600; margin-top: 8px; }
-        
-        .setup-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; background: #fff5f5; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #feb2b2; }
-        label { font-weight: 700; display: block; margin-bottom: 10px; color: #9b2c2c; font-size: 16px; }
-        select, input, textarea { width: 100%; padding: 14px; border: 2px solid #fed7d7; border-radius: 10px; font-size: 16px; outline: none; transition: 0.3s; background: white;}
-        select:focus, textarea:focus { border-color: #f56565; box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.2); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luyện Từ Vựng Kinh Tế – GV Bằng</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8192C;
+    --red-dark: #B8111F;
+    --red-light: #FF4D5E;
+    --bg: #F5F6FA;
+    --card: #FFFFFF;
+    --text: #1A1D2E;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --green: #10B981;
+    --yellow: #F59E0B;
+    --blue: #3B82F6;
+    --shadow: 0 4px 24px rgba(0,0,0,.08);
+    --radius: 16px;
+  }
 
-        .main-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 30px; }
-        .card { background: #fff; border: 1px solid #fed7d7; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        
-        /* Mic Zone */
-        .mic-card { text-align: center; border: 3px solid #f56565; background: #fffaf0; position: relative; }
-        .mic-card h3 { color: #c53030; margin-top: 0; font-size: 22px; }
-        #wordDisplay { font-size: 38px; font-weight: 800; color: #1a202c; margin: 25px 0; display: block; padding-bottom: 20px; border-bottom: 2px dashed #fed7d7; line-height: 1.5; }
-        
-        .score-box { font-size: 75px; font-weight: 900; margin: 15px 0; min-height: 90px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); transition: color 0.3s;}
-        
-        /* Highlight words */
-        .word-correct { color: #38a169; }
-        .word-wrong { color: #e53e3e; text-decoration: underline; text-decoration-style: wavy;}
-        
-        /* AI Suggestion Box */
-        .ai-feedback { background: #fff5f5; border-left: 5px solid #c53030; padding: 15px 20px; text-align: left; margin-top: 20px; border-radius: 8px; display: none; }
-        .ai-feedback h4 { margin: 0 0 10px 0; color: #c53030; display: flex; align-items: center; gap: 8px;}
-        .ai-feedback ul { margin: 0; padding-left: 20px; color: #742a2a; font-size: 16px; line-height: 1.6;}
-        .ai-feedback li { margin-bottom: 5px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .btn { padding: 18px 30px; border: none; border-radius: 50px; cursor: pointer; font-weight: 800; font-size: 18px; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
-        .btn-mic { background: linear-gradient(135deg, #f56565, #c53030); color: white; width: 280px; box-shadow: 0 4px 15px rgba(229, 62, 62, 0.4); }
-        .btn-mic:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(229, 62, 62, 0.6); }
-        .btn-mic.listening { background: #ecc94b; color: #744210; animation: pulse 1.5s infinite; box-shadow: none;}
-        
-        .btn-save { background: linear-gradient(135deg, #48bb78, #2f855a); color: white; width: 100%; margin-top: 25px; box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);}
-        .btn-save:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(72, 187, 120, 0.6); }
-        .btn-save:disabled { background: #e2e8f0; color: #a0aec0; cursor: not-allowed; box-shadow: none; transform: none; }
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 40px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); background: white;}
-        th, td { border-bottom: 1px solid #fed7d7; padding: 18px; text-align: left; }
-        th { background: #c53030; color: white; font-weight: 700; text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px;}
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background: #fff5f5; transition: 0.2s; }
+  /* ── HEADER ── */
+  header {
+    background: var(--red);
+    color: #fff;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 12px rgba(232,25,44,.4);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -.3px; }
+  .logo span { background: rgba(255,255,255,.2); border-radius: 8px; padding: 4px 10px; font-size: .8rem; font-weight: 600; }
+  .teacher-badge { display: flex; align-items: center; gap: 8px; font-size: .9rem; opacity: .9; }
+  .teacher-badge .av { width: 36px; height: 36px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--red); font-weight: 800; font-size: 1rem; }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(236, 201, 75, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(236, 201, 75, 0); } 100% { box-shadow: 0 0 0 0 rgba(236, 201, 75, 0); } }
-    </style>
+  /* ── LAYOUT ── */
+  .app { display: grid; grid-template-columns: 1fr 340px; gap: 24px; padding: 24px 32px; max-width: 1280px; margin: 0 auto; }
+  @media (max-width: 900px) { .app { grid-template-columns: 1fr; padding: 16px; } }
+
+  /* ── CARDS ── */
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; }
+  .card-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; color: var(--red); margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid #FEE2E5; }
+  .card-title svg { width: 18px; height: 18px; }
+
+  /* ── WORD SELECTOR ── */
+  .word-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .word-nav select { flex: 1; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: .9rem; font-weight: 500; background: #fff; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+  .word-nav select:focus { outline: none; border-color: var(--red); }
+  .btn-nav { width: 40px; height: 40px; border: 2px solid var(--border); background: #fff; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  .btn-nav:hover { border-color: var(--red); color: var(--red); }
+
+  /* ── WORD DISPLAY ── */
+  .word-display { text-align: center; padding: 28px 20px; background: linear-gradient(135deg, #FFF5F6 0%, #FFF 100%); border-radius: 14px; border: 2px solid #FEE2E5; margin-bottom: 20px; position: relative; }
+  .word-en { font-family: 'Space Grotesk', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 8px; }
+  .word-phonetic { font-size: 1.1rem; color: var(--muted); margin-bottom: 10px; letter-spacing: .02em; }
+  .word-vi { font-size: 1.05rem; color: var(--red-dark); font-weight: 600; }
+  .btn-listen { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; background: var(--red); border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: transform .15s; }
+  .btn-listen:hover { transform: scale(1.1); }
+  .btn-listen:active { transform: scale(.95); }
+  .word-counter { position: absolute; top: 12px; left: 12px; font-size: .75rem; font-weight: 600; color: var(--muted); background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; }
+
+  /* ── SPEAKING AREA ── */
+  .speak-center { text-align: center; }
+  .mic-btn { width: 96px; height: 96px; border-radius: 50%; background: var(--red); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; margin: 0 auto 16px; box-shadow: 0 8px 32px rgba(232,25,44,.35); transition: all .25s; position: relative; }
+  .mic-btn:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(232,25,44,.45); }
+  .mic-btn.listening { background: #B8111F; animation: pulse 1.2s infinite; }
+  .mic-btn svg { width: 40px; height: 40px; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 8px 32px rgba(232,25,44,.35); } 50% { box-shadow: 0 8px 32px rgba(232,25,44,.6), 0 0 0 16px rgba(232,25,44,.1); } }
+
+  .speak-label { font-weight: 700; font-size: 1rem; color: var(--text); margin-bottom: 6px; }
+  .speak-sub { font-size: .82rem; color: var(--muted); }
+  .heard-text { margin-top: 14px; background: #F9FAFB; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px 16px; font-size: .9rem; color: var(--text); min-height: 48px; text-align: left; }
+  .heard-label { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
+
+  /* ── SCORE ── */
+  .score-ring { display: flex; gap: 16px; align-items: center; justify-content: center; margin: 20px 0 16px; }
+  .ring-wrap { text-align: center; }
+  .ring { position: relative; width: 90px; height: 90px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 8; }
+  .ring .track { stroke: #F3F4F6; }
+  .ring .fill { stroke: var(--red); stroke-linecap: round; transition: stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+  .ring .fill.good { stroke: var(--green); }
+  .ring .fill.ok { stroke: var(--yellow); }
+  .ring-value { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; }
+  .ring-label { font-size: .75rem; font-weight: 600; color: var(--muted); margin-top: 4px; }
+
+  /* ── AI COMMENT ── */
+  .ai-comment { background: #F0F9FF; border: 1.5px solid #BAE6FD; border-radius: 12px; padding: 14px 16px; margin-top: 4px; }
+  .ai-comment .ai-label { font-size: .75rem; font-weight: 700; color: #0284C7; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .ai-comment p { font-size: .85rem; color: #0C4A6E; line-height: 1.55; }
+
+  /* ── SAVE BTN ── */
+  .btn-save { width: 100%; padding: 13px; background: var(--red); color: #fff; border: none; border-radius: 12px; font-family: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; transition: all .2s; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-save:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,25,44,.35); }
+  .btn-save:disabled { background: #D1D5DB; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* ── RIGHT COLUMN ── */
+  .right-col { display: flex; flex-direction: column; gap: 20px; }
+
+  /* ── TEACHER NOTES ── */
+  .notes-area { width: 100%; min-height: 120px; border: 1.5px solid var(--border); border-radius: 10px; font-family: inherit; font-size: .88rem; padding: 12px; resize: vertical; color: var(--text); line-height: 1.6; }
+  .notes-area:focus { outline: none; border-color: var(--red); }
+  .btn-save-note { margin-top: 10px; padding: 9px 20px; background: var(--red); color: #fff; border: none; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: .85rem; cursor: pointer; transition: background .2s; }
+  .btn-save-note:hover { background: var(--red-dark); }
+
+  /* ── STATS ── */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-item { background: #F9FAFB; border-radius: 12px; padding: 14px; text-align: center; border: 1.5px solid var(--border); }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; font-weight: 700; }
+  .stat-label { font-size: .72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-top: 2px; }
+
+  /* ── STUDENT NAME ── */
+  .student-input { display: flex; gap: 8px; align-items: center; }
+  .student-input input { flex: 1; padding: 10px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; font-size: .9rem; font-weight: 600; }
+  .student-input input:focus { outline: none; border-color: var(--red); }
+
+  /* ── LOG TABLE ── */
+  .log-section { margin-top: 28px; }
+  .log-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .log-header h3 { font-size: .85rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text); }
+  .btn-export, .btn-clear { padding: 8px 16px; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: .8rem; cursor: pointer; transition: all .2s; border: none; }
+  .btn-export { background: #1D4ED8; color: #fff; }
+  .btn-export:hover { background: #1E40AF; }
+  .btn-clear { background: #FEE2E5; color: var(--red); }
+  .btn-clear:hover { background: var(--red); color: #fff; }
+  .btn-group { display: flex; gap: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  thead th { background: var(--red); color: #fff; padding: 10px 12px; text-align: left; font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; }
+  thead th:first-child { border-radius: 8px 0 0 8px; }
+  thead th:last-child { border-radius: 0 8px 8px 0; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:hover { background: #FFF5F6; }
+  tbody td { padding: 10px 12px; vertical-align: middle; }
+  .score-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: .78rem; }
+  .score-great { background: #D1FAE5; color: #065F46; }
+  .score-ok { background: #FEF3C7; color: #92400E; }
+  .score-low { background: #FEE2E5; color: #991B1B; }
+  .td-comment { color: var(--muted); max-width: 200px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-red { background: var(--red); }
+  .empty-log { text-align: center; padding: 40px; color: var(--muted); }
+  .empty-log svg { width: 48px; height: 48px; opacity: .3; margin-bottom: 10px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: #F3F4F6; border-radius: 12px; padding: 4px; }
+  .tab { flex: 1; padding: 9px; border-radius: 9px; border: none; background: transparent; font-family: inherit; font-weight: 600; font-size: .82rem; cursor: pointer; color: var(--muted); transition: all .2s; }
+  .tab.active { background: #fff; color: var(--red); box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+
+  /* ── PROGRESS WORDS ── */
+  .progress-bar-wrap { margin-top: 12px; }
+  .pb-label { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-bottom: 4px; }
+  .pb { height: 8px; background: #F3F4F6; border-radius: 99px; overflow: hidden; }
+  .pb-fill { height: 100%; background: var(--red); border-radius: 99px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+
+  /* notification */
+  .notif { position: fixed; top: 80px; right: 24px; background: var(--text); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: .88rem; font-weight: 600; z-index: 999; opacity: 0; transform: translateY(-10px); transition: all .3s; pointer-events: none; }
+  .notif.show { opacity: 1; transform: translateY(0); }
+
+  /* filter row */
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-row input { flex: 1; min-width: 160px; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: inherit; font-size: .85rem; }
+  .filter-row input:focus { outline: none; border-color: var(--red); }
+  .filter-row select { padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: inherit; font-size: .85rem; background: #fff; }
+  .filter-row select:focus { outline: none; border-color: var(--red); }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🌟 INSPIRE ENGLISH 🌟</h1>
-        <p>HỆ THỐNG PHÂN TÍCH CHỈNH SỬA PHÁT ÂM DÀNH RIÊNG CHO LỚP CAMPATH 3 - Mr. Bằng</p>
+<header>
+  <div class="logo">
+    🎓 EconVocab Pro <span>Kinh Tế</span>
+  </div>
+  <div class="teacher-badge">
+    <div class="av">B</div>
+    <span>GV <strong>Bằng</strong></span>
+  </div>
+</header>
+
+<div id="notif" class="notif"></div>
+
+<div class="app">
+  <!-- LEFT COLUMN -->
+  <div>
+    <!-- Student name -->
+    <div class="card" style="margin-bottom:20px; padding: 16px 24px;">
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <span style="font-weight:700; font-size:.85rem; white-space:nowrap;">👤 Tên học sinh:</span>
+        <div class="student-input" style="flex:1;">
+          <input type="text" id="studentName" placeholder="Nhập tên của bạn..." value="NICK" maxlength="30">
+        </div>
+        <span id="sessionScore" style="font-size:.85rem; color:var(--muted); white-space:nowrap;">Phiên này: <strong id="sessionCorrect">0</strong> / <strong id="sessionTotal">0</strong></span>
+      </div>
     </div>
 
-    <div class="setup-area">
-        <div>
-            <label>👤 TÊN HỌC SINH:</label>
-            <select id="studentName">
-                <option>NICK</option><option>HERI</option><option>KATE</option>
-                <option>HENRY</option><option>KELVIN</option><option>DORA</option><option>JACKSON</option>
-            </select>
-        </div>
-        <div>
-            <label>📚 CHỌN BÀI HỌC:</label>
-            <select id="unitSelect" onchange="loadVocab()">
-                <option value="">-- Chọn Unit --</option>
-                <option value="6">Unit 6: Community Services</option>
-                <option value="7">Unit 7: Movies</option>
-                <option value="8">Unit 8: The World Around Us</option>
-                <option value="9">Unit 9: Houses In The Future</option>
-                <option value="10">Unit 10: Cities Around The World</option>
-            </select>
-        </div>
-        <div>
-            <label>🎯 Từ Vựng / Câu Luyện Tập:</label>
-            <select id="wordSelect" onchange="updateTarget()"></select>
-        </div>
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('speak')">🎤 Luyện Nói</button>
+      <button class="tab" onclick="switchTab('flash')">📚 Flashcard</button>
+      <button class="tab" onclick="switchTab('quiz')">✍️ Kiểm Tra</button>
     </div>
 
-    <div class="main-grid">
-        <div class="card mic-card">
-            <h3>🎙️ KHU VỰC LUYỆN NÓI & PHÂN TÍCH</h3>
-            <span id="wordDisplay">Vui lòng chọn bài học...</span>
-            <button class="btn btn-mic" id="btnMic">🔴 CHẠM ĐỂ NÓI</button>
-            
-            <div id="resultArea" style="margin-top: 25px;">
-                <p style="font-size: 18px; color: #742a2a; font-weight: bold; margin-bottom: 5px;">AI NGHE ĐƯỢC:</p>
-                <div id="heardTxt" style="font-size: 24px; min-height: 35px; color: #2d3748;">---</div>
-                
-                <div class="score-box">
-                    <span id="scoreVal" style="color: #a0aec0;">--</span><span style="font-size: 40px; color: #a0aec0;" id="percentSign">%</span>
-                </div>
+    <!-- SPEAK TAB -->
+    <div id="tab-speak">
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></svg>
+          Khu Vực Luyện Nói & Phân Tích
+        </div>
 
-                <div class="ai-feedback" id="aiFeedback">
-                    <h4>MR BẰNG GỢI Ý CHỈNH SỬA:</h4>
-                    <ul id="aiSuggestionList"></ul>
-                </div>
+        <div class="word-nav">
+          <button class="btn-nav" onclick="prevWord()" title="Từ trước">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <select id="wordSelect" onchange="selectWord(this.value)"></select>
+          <button class="btn-nav" onclick="nextWord()" title="Từ sau">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <button class="btn-nav" onclick="randomWord()" title="Ngẫu nhiên" style="color:var(--red);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 1.9-1.7 3.3-1.7H22M22 18l-4-4M22 18l-4 4M2 6h1.9c1.3 0 2.5.6 3.3 1.7l.5.8"/></svg>
+          </button>
+        </div>
+
+        <div class="word-display">
+          <span class="word-counter" id="wordCounter">1 / 200</span>
+          <button class="btn-listen" onclick="listenWord()" title="Nghe phát âm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+          <div class="word-en" id="wordEn">Abatement cost</div>
+          <div class="word-phonetic" id="wordPhonetic">/əˈbeɪtmənt kɒst/</div>
+          <div class="word-vi" id="wordVi">Chi phí kiểm soát</div>
+        </div>
+
+        <div class="speak-center">
+          <button class="mic-btn" id="micBtn" onclick="toggleListen()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></svg>
+          </button>
+          <div class="speak-label" id="speakLabel">CHẠM ĐỂ NÓI</div>
+          <div class="speak-sub" id="speakSub">Bấm mic rồi đọc từ tiếng Anh phía trên</div>
+
+          <div class="heard-text" id="heardBox" style="display:none;">
+            <div class="heard-label">AI nghe được:</div>
+            <div id="heardText">—</div>
+          </div>
+        </div>
+
+        <!-- Score rings -->
+        <div class="score-ring" id="scoreSection" style="display:none;">
+          <div class="ring-wrap">
+            <div class="ring">
+              <svg width="90" height="90" viewBox="0 0 90 90">
+                <circle class="track" cx="45" cy="45" r="37" />
+                <circle class="fill" id="ring1" cx="45" cy="45" r="37" stroke-dasharray="232.5" stroke-dashoffset="232.5"/>
+              </svg>
+              <div class="ring-value" id="scoreVal">0%</div>
             </div>
+            <div class="ring-label">Độ Chính Xác</div>
+          </div>
         </div>
 
-        <div class="card">
-            <h3 style="color: #c53030; margin-top: 0; font-size: 22px;">📝 Nhật Ký Của Giáo Viên</h3>
-            <textarea id="teacherNote" rows="7" placeholder="Ghi chú thêm của GV (ví dụ: Cần mở khẩu hình miệng to hơn, chú ý ngữ điệu...)"></textarea>
-            <button class="btn btn-save" id="btnSave" disabled onclick="saveData()">💾 LƯU KẾT QUẢ VÀO SỔ</button>
-            <p id="saveHint" style="font-size:14px; color:#e53e3e; margin-top:15px; text-align:center; font-weight: bold;">(Học sinh cần hoàn thành phát âm để lưu kết quả)</p>
+        <div class="ai-comment" id="aiComment" style="display:none;">
+          <div class="ai-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Nhận xét AI & GV Bằng
+          </div>
+          <p id="aiCommentText"></p>
         </div>
+
+        <button class="btn-save" id="btnSave" onclick="saveRecord()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          LƯU KẾT QUẢ VÀO SỔ
+        </button>
+      </div>
+
+      <!-- Progress -->
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Tiến Độ Phiên Học
+        </div>
+        <div class="stat-grid" id="statGrid">
+          <div class="stat-item"><div class="stat-value" id="statTotal" style="color:var(--blue)">0</div><div class="stat-label">Đã Luyện</div></div>
+          <div class="stat-item"><div class="stat-value" id="statAvg" style="color:var(--green)">—</div><div class="stat-label">Điểm TB</div></div>
+          <div class="stat-item"><div class="stat-value" id="stat100" style="color:var(--green)">0</div><div class="stat-label">Đạt 100%</div></div>
+          <div class="stat-item"><div class="stat-value" id="statBelow" style="color:var(--red)">0</div><div class="stat-label">Cần Cải Thiện</div></div>
+        </div>
+        <div class="progress-bar-wrap" id="progressWrap" style="display:none;">
+          <div class="pb-label"><span id="pbLabel">Đã học 0 từ</span><span id="pbPct">0%</span></div>
+          <div class="pb"><div class="pb-fill" id="pbFill" style="width:0%"></div></div>
+        </div>
+      </div>
     </div>
 
-    <table>
-        <thead>
+    <!-- FLASHCARD TAB -->
+    <div id="tab-flash" style="display:none;">
+      <div class="card" style="text-align:center; cursor:pointer;" onclick="flipCard()" id="flashCard">
+        <div style="min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; user-select:none;">
+          <div style="font-size:.8rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.08em;" id="flashSide">TIẾNG ANH</div>
+          <div class="word-en" id="flashWord" style="font-size:2rem;"></div>
+          <div id="flashMeaning" style="display:none; color:var(--red-dark); font-weight:600; font-size:1.1rem;"></div>
+          <div style="margin-top:8px; font-size:.8rem; color:var(--muted);">👆 Nhấn để lật thẻ</div>
+        </div>
+        <div style="display:flex; gap:12px; justify-content:center; margin-top:8px;">
+          <button onclick="event.stopPropagation(); prevWord(); showFlash();" class="btn-nav">←</button>
+          <button onclick="event.stopPropagation(); listenWord();" class="btn-nav">🔊</button>
+          <button onclick="event.stopPropagation(); nextWord(); showFlash();" class="btn-nav">→</button>
+          <button onclick="event.stopPropagation(); randomWord(); showFlash();" class="btn-nav" style="color:var(--red);">⟳</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUIZ TAB -->
+    <div id="tab-quiz" style="display:none;">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Kiểm Tra Từ Vựng
+        </div>
+        <div id="quizArea">
+          <div style="text-align:center; padding: 20px 0;">
+            <div style="font-size:.9rem; color:var(--muted); margin-bottom:16px;">Chọn nghĩa tiếng Việt đúng cho từ:</div>
+            <div class="word-en" id="quizWord" style="font-size:1.8rem; margin-bottom:24px;"></div>
+            <div id="quizOptions" style="display:grid; gap:10px;"></div>
+            <div id="quizFeedback" style="margin-top:16px; font-weight:700; font-size:1rem; min-height:24px;"></div>
+            <button onclick="newQuiz()" style="margin-top:16px; padding:10px 28px; background:var(--red); color:#fff; border:none; border-radius:10px; font-family:inherit; font-weight:700; cursor:pointer; font-size:.9rem;">Câu Tiếp Theo →</button>
+          </div>
+        </div>
+        <div class="stat-grid" style="margin-top:16px;">
+          <div class="stat-item"><div class="stat-value" id="quizCorrect" style="color:var(--green)">0</div><div class="stat-label">Đúng</div></div>
+          <div class="stat-item"><div class="stat-value" id="quizWrong" style="color:var(--red)">0</div><div class="stat-label">Sai</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG TABLE -->
+    <div class="log-section card">
+      <div class="log-header">
+        <h3>📋 Nhật Ký Luyện Tập</h3>
+        <div class="btn-group">
+          <button class="btn-export" onclick="exportCSV()">⬇️ Xuất Excel/CSV</button>
+          <button class="btn-clear" onclick="clearLog()">🗑️ Xóa Toàn Bộ</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <input type="text" id="filterName" placeholder="🔍 Lọc theo tên học sinh..." oninput="renderLog()">
+        <select id="filterScore" onchange="renderLog()">
+          <option value="">Tất cả điểm</option>
+          <option value="100">Điểm 100%</option>
+          <option value="60">≥ 60%</option>
+          <option value="low">Dưới 60%</option>
+        </select>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
             <tr>
-                <th>Học sinh</th>
-                <th>Nội dung luyện tập</th>
-                <th>Điểm AI</th>
-                <th>Nhận xét AI & GV</th>
-                <th>Thời gian</th>
+              <th>Học Sinh</th>
+              <th>Nội Dung Luyện</th>
+              <th>Điểm AI</th>
+              <th>Nhận Xét</th>
+              <th>Thời Gian</th>
             </tr>
-        </thead>
-        <tbody id="logBody"></tbody>
-    </table>
-    <button class="btn" style="background:#4a5568; color:white; margin-top:30px; width: 100%; border-radius: 10px;" onclick="exportData()">📊 XUẤT BÁO CÁO EXCEL/CSV</button>
+          </thead>
+          <tbody id="logBody"></tbody>
+        </table>
+        <div id="emptyLog" class="empty-log">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/></svg>
+          <p>Chưa có dữ liệu luyện tập.<br>Hãy bắt đầu nói và lưu kết quả!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-col">
+    <!-- Teacher notes -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Nhật Ký Của Giáo Viên
+      </div>
+      <textarea class="notes-area" id="teacherNotes" placeholder="Ghi chú thêm của GV (ví dụ: Cần mở khẩu hình miệng to hơn, chú ý ngữ điệu...)"></textarea>
+      <button class="btn-save-note" onclick="saveNote()">💾 Lưu Ghi Chú</button>
+    </div>
+
+    <!-- Word list stats -->
+    <div class="card">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Danh Sách Từ Đã Học
+      </div>
+      <div class="stat-grid">
+        <div class="stat-item"><div class="stat-value" style="color:var(--blue)">3,500</div><div class="stat-label">Tổng Từ</div></div>
+        <div class="stat-item"><div class="stat-value" id="practicedCount" style="color:var(--green)">0</div><div class="stat-label">Đã Luyện</div></div>
+      </div>
+      <div style="margin-top:14px; max-height:280px; overflow-y:auto;">
+        <div id="wordListMini" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+      </div>
+    </div>
+
+    <!-- Quick tips -->
+    <div class="card" style="background: linear-gradient(135deg, #FFF5F6, #fff);">
+      <div class="card-title">💡 Mẹo Phát Âm – GV Bằng</div>
+      <div style="font-size:.84rem; line-height:1.7; color:#374151;">
+        <p style="margin-bottom:8px;">🔹 <strong>Nghe trước:</strong> Bấm 🔊 để nghe chuẩn trước khi luyện.</p>
+        <p style="margin-bottom:8px;">🔹 <strong>Nói to:</strong> Phát âm rõ ràng, đủ âm lượng cho mic thu.</p>
+        <p style="margin-bottom:8px;">🔹 <strong>Lặp lại:</strong> Mỗi từ luyện tối thiểu 3 lần để nhớ lâu.</p>
+        <p style="margin-bottom:8px;">🔹 <strong>Trọng âm:</strong> Chú ý trọng âm trong từ ghép tiếng Anh.</p>
+        <p>🔹 <strong>Ngữ cảnh:</strong> Học từ trong câu để nhớ nghĩa tốt hơn.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    const vocabulary = {
-        "6": [
-            "[TỪ] Police station", "[TỪ] Post office", "[TỪ] Charity organization", "[TỪ] Volunteer", "[TỪ] Donate blood",
-            "[TỪ] Orphanage", "[TỪ] Nursing home", "[TỪ] Homeless shelter", "[TỪ] Soup kitchen", "[TỪ] Fundraiser",
-            "[TỪ] Community center", "[TỪ] Public library", "[TỪ] Fire station", "[TỪ] Hospital", "[TỪ] Police officer",
-            "[TỪ] Paramedic", "[TỪ] Social worker", "[TỪ] Donate money", "[TỪ] Plant trees", "[TỪ] Clean up",
-            "[TỪ] Pick up trash", "[TỪ] Recycle", "[TỪ] Volunteer work", "[TỪ] Caregiver", "[TỪ] Neighborhood watch",
-            "[TỪ] First aid kit", "[TỪ] Emergency", "[TỪ] Rescue team", "[TỪ] Local community", "[TỪ] Support",
-            "[CÂU] I want to volunteer at the local charity.",
-            "[CÂU] The fire station is next to the hospital.",
-            "[CÂU] We should donate clothes to poor children.",
-            "[CÂU] Can you show me the way to the post office?",
-            "[CÂU] She visits the orphanage on weekends.",
-            "[CÂU] They organized a fundraiser for the homeless shelter.",
-            "[CÂU] He works as a police officer in my city.",
-            "[CÂU] We picked up trash in the park yesterday.",
-            "[CÂU] Many students planted trees around the school.",
-            "[CÂU] My sister wants to be a social worker.",
-            "[CÂU] They served hot meals at the soup kitchen.",
-            "[CÂU] The public library has thousands of books.",
-            "[CÂU] The rescue team saved the dog from the river.",
-            "[CÂU] A first aid kit is very important in an emergency.",
-            "[CÂU] The non-profit organization supports local communities."
-        ],
-        "7": [
-            "[TỪ] Science fiction", "[TỪ] Blockbuster", "[TỪ] Special effects", "[TỪ] Documentary", "[TỪ] Main character",
-            "[TỪ] Action movie", "[TỪ] Comedy", "[TỪ] Horror film", "[TỪ] Romantic comedy", "[TỪ] Thriller",
-            "[TỪ] Animated movie", "[TỪ] Director", "[TỪ] Actor", "[TỪ] Actress", "[TỪ] Cinema",
-            "[TỪ] Ticket office", "[TỪ] Popcorn", "[TỪ] Screenplay", "[TỪ] Soundtrack", "[TỪ] Premiere",
-            "[TỪ] Review", "[TỪ] Subtitles", "[TỪ] Voice actor", "[TỪ] Award", "[TỪ] Cast",
-            "[TỪ] Sequel", "[TỪ] Plot", "[TỪ] Climax", "[TỪ] Villain", "[TỪ] Hero",
-            "[CÂU] My favorite movie genre is science fiction.",
-            "[CÂU] The special effects in this film are fantastic.",
-            "[CÂU] Let's go to the cinema to watch a comedy.",
-            "[CÂU] That blockbuster movie broke all box office records.",
-            "[CÂU] He likes watching movies on weekends.",
-            "[CÂU] We watched a terrifying horror film last night.",
-            "[CÂU] The actors performed brilliantly in the action movie.",
-            "[CÂU] She loves watching romantic comedies on rainy days.",
-            "[CÂU] I usually buy popcorn and sodas at the cinema.",
-            "[CÂU] The thriller kept us on the edge of our seats.",
-            "[CÂU] The villain's evil plan was revealed at the climax.",
-            "[CÂU] The final scene of the film made me cry.",
-            "[CÂU] He is a famous hero in many action films.",
-            "[CÂU] The director won an award for his amazing screenplay.",
-            "[CÂU] The sequel was completely different from the first movie."
-        ],
-        "8": [
-            "[TỪ] National park", "[TỪ] Sleeping bag", "[TỪ] Flashlight", "[TỪ] Environment", "[TỪ] Explore",
-            "[TỪ] Mountain", "[TỪ] Waterfall", "[TỪ] Rainforest", "[TỪ] Desert", "[TỪ] Ocean",
-            "[TỪ] Wildlife", "[TỪ] Endangered species", "[TỪ] Pollution", "[TỪ] Conservation", "[TỪ] Compass",
-            "[TỪ] Tent", "[TỪ] Backpack", "[TỪ] Hiking boots", "[TỪ] Campfire", "[TỪ] Marshmallow",
-            "[TỪ] Insect repellent", "[TỪ] Map", "[TỪ] Binoculars", "[TỪ] Scenery", "[TỪ] Valley",
-            "[TỪ] Ecosystem", "[TỪ] Habitat", "[TỪ] Global warming", "[TỪ] Deforestation", "[TỪ] Climate change",
-            "[CÂU] We are going camping in the national park.",
-            "[CÂU] Don't forget to bring your sleeping bags and flashlights.",
-            "[CÂU] We must work together to protect the environment.",
-            "[CÂU] There is a beautiful waterfall hidden in the forest.",
-            "[CÂU] We hiked through the dense rainforest.",
-            "[CÂU] They pitched their tents near the beautiful waterfall.",
-            "[CÂU] Pollution is a serious threat to our oceans.",
-            "[CÂU] We must protect endangered species from extinction.",
-            "[CÂU] He roasted marshmallows over the campfire.",
-            "[CÂU] She used binoculars to watch the wild birds.",
-            "[CÂU] Global warming causes the ice caps to melt.",
-            "[CÂU] Deforestation destroys the natural habitat of many animals.",
-            "[CÂU] Climate change affects ecosystems all over the world.",
-            "[CÂU] Insect repellent is essential when camping in the woods.",
-            "[CÂU] The scenery in the valley was breathtaking."
-        ],
-        "9": [
-            "[TỪ] Eco-friendly", "[TỪ] Solar panel", "[TỪ] Space station", "[TỪ] Automatic", "[TỪ] Smart home",
-            "[TỪ] Robot helper", "[TỪ] Voice control", "[TỪ] Artificial intelligence", "[TỪ] Wind turbine", "[TỪ] Sustainable",
-            "[TỪ] Underground house", "[TỪ] Floating house", "[TỪ] Drone delivery", "[TỪ] Virtual reality", "[TỪ] Hologram",
-            "[TỪ] Wireless charging", "[TỪ] Smart appliance", "[TỪ] Temperature control", "[TỪ] Security system", "[TỪ] Solar energy",
-            "[TỪ] Spacecraft", "[TỪ] Alien", "[TỪ] Galaxy", "[TỪ] Automation", "[TỪ] High-tech",
-            "[TỪ] Gadget", "[TỪ] Innovation", "[TỪ] Orbit", "[TỪ] Gravity", "[TỪ] Astronaut",
-            "[CÂU] In the future, houses will be powered by solar energy.",
-            "[CÂU] My smart home can automatically control the temperature.",
-            "[CÂU] Astronauts wear spacesuits to survive in space.",
-            "[CÂU] Eco-friendly houses are good for our planet.",
-            "[CÂU] Our future homes will have advanced security systems.",
-            "[CÂU] The robot helper cleans the floors automatically.",
-            "[CÂU] You can control the smart appliances using your voice.",
-            "[CÂU] Wind turbines generate clean and sustainable energy.",
-            "[CÂU] They received their packages via drone delivery.",
-            "[CÂU] We will use virtual reality for online learning.",
-            "[CÂU] Holograms will replace traditional television screens.",
-            "[CÂU] Scientists are searching for alien life in other galaxies.",
-            "[CÂU] The new high-tech gadgets are truly amazing.",
-            "[CÂU] Automation makes our daily lives much easier.",
-            "[CÂU] The astronaut floated in zero gravity."
-        ],
-        "10": [
-            "[TỪ] Skyscraper", "[TỪ] Public transport", "[TỪ] Amusement park", "[TỪ] Traffic jam", "[TỪ] Architecture",
-            "[TỪ] Capital city", "[TỪ] Population", "[TỪ] Downtown", "[TỪ] Suburb", "[TỪ] Tourist attraction",
-            "[TỪ] Monument", "[TỪ] Museum", "[TỪ] Art gallery", "[TỪ] Bridge", "[TỪ] Harbor",
-            "[TỪ] Subway", "[TỪ] Bus stop", "[TỪ] Taxi stand", "[TỪ] Pedestrian", "[TỪ] Pavement",
-            "[TỪ] Crosswalk", "[TỪ] Traffic lights", "[TỪ] Neighborhood", "[TỪ] Historic site", "[TỪ] Modern architecture",
-            "[TỪ] Boulevard", "[TỪ] Intersection", "[TỪ] Roundabout", "[TỪ] Skyline", "[TỪ] Landmark",
-            "[CÂU] New York is famous for its tall skyscrapers.",
-            "[CÂU] Public transport is very convenient in this city.",
-            "[CÂU] We spent the whole day playing at the amusement park.",
-            "[CÂU] The traffic jams made me late for school today.",
-            "[CÂU] London is a global city with a massive population.",
-            "[CÂU] The downtown area is always crowded with pedestrians.",
-            "[CÂU] We visited a fascinating historic site yesterday.",
-            "[CÂU] She takes the subway to work every morning.",
-            "[CÂU] You must use the crosswalk to cross the busy street.",
-            "[CÂU] We took a double-decker bus to see the tourist attractions.",
-            "[CÂU] The bridge connects the two sides of the capital city.",
-            "[CÂU] He lives in a quiet suburb away from the traffic jams.",
-            "[CÂU] The city's skyline looks beautiful at night.",
-            "[CÂU] We drove through a busy intersection and a roundabout.",
-            "[CÂU] The Eiffel Tower is a famous landmark in Paris."
-        ]
-    };
+// ─────────────────────────────────────────────
+// VOCABULARY DATA (from PDF)
+// ─────────────────────────────────────────────
+const VOCAB = [
+  {w:"Abatement cost",m:"Chi phí kiểm soát ô nhiễm"},{w:"Ability and earnings",m:"Năng lực và thu nhập"},{w:"Ability to pay",m:"Khả năng chi trả"},{w:"Ability to pay theory",m:"Lý thuyết về khả năng chi trả"},{w:"Abnormal profits",m:"Lợi nhuận dị thường"},{w:"Abscissa",m:"Hoành độ (trục X)"},{w:"Absenteeism",m:"Trốn việc, nghỉ làm không lý do"},{w:"Absentee landlord",m:"Địa chủ cách biệt"},{w:"Absolute advantage",m:"Lợi thế tuyệt đối"},{w:"Absolute cost advantage",m:"Lợi thế nhờ phí tổn tuyệt đối"},{w:"Absolute income hypothesis",m:"Giả thuyết thu nhập tuyệt đối"},{w:"Absolute monopoly",m:"Độc quyền tuyệt đối"},{w:"Absolute prices",m:"Giá tuyệt đối"},{w:"Absolute scarcity",m:"Khan hiếm tuyệt đối"},{w:"Absolute value",m:"Giá trị tuyệt đối"},{w:"Absorption approach",m:"Phương pháp hấp thu"},{w:"Abstinence",m:"Nhịn chi tiêu"},{w:"Accelerated depreciation",m:"Khấu hao nhanh"},{w:"Accelerating inflation",m:"Lạm phát gia tốc"},{w:"Accelerator",m:"Nguyên lý gia tốc"},{w:"Accelerator effect",m:"Hiệu ứng gia tốc"},{w:"Accelerator principle",m:"Nguyên lý gia tốc đầu tư"},{w:"Acceptance",m:"Chấp nhận thanh toán"},{w:"Accepting house",m:"Ngân hàng nhận trả"},{w:"Accession rate",m:"Tỷ lệ gia tăng lao động"},{w:"Accessions tax",m:"Thuế quà tặng"},{w:"Accommodating monetary policy",m:"Chính sách tiền tệ mở rộng"},{w:"Account",m:"Tài khoản"},{w:"Accrued expenses",m:"Chi phí phát sinh"},{w:"Action lag",m:"Độ trễ của hành động"},{w:"Active balance",m:"Dư ngạch"},{w:"Activity analysis",m:"Phân tích hoạt động"},{w:"Activity rate",m:"Tỷ lệ lao động"},{w:"Adaptive expectation",m:"Kỳ vọng thích nghi"},{w:"Adding up problem",m:"Vấn đề cộng tổng"},{w:"Additional worker hypothesis",m:"Giả thuyết công nhân bổ sung"},{w:"Addition rule",m:"Quy tắc cộng"},{w:"Additive utility function",m:"Hàm thoả dụng phụ gia"},{w:"Address principle",m:"Nguyên lý địa chỉ"},{w:"Adjustable peg",m:"Hệ thống neo tỷ giá"},{w:"Adjustment cost",m:"Chi phí điều chỉnh"},{w:"Adjustment lag",m:"Độ trễ điều chỉnh"},{w:"Adjustment process",m:"Quá trình điều chỉnh"},{w:"Administered prices",m:"Các mức giá bị quản lý"},{w:"Administrative lag",m:"Độ trễ do hành chính"},{w:"Advalorem tax",m:"Thuế theo giá trị"},{w:"Advance",m:"Tiền ứng trước"},{w:"Advance refunding",m:"Hoàn trả trước"},{w:"Advanced countries",m:"Các nước phát triển"},{w:"Adverse balance",m:"Cán cân thâm hụt"},{w:"Adverse selection",m:"Lựa chọn bất lợi"},{w:"Advertising",m:"Quảng cáo"},{w:"Advertising-sale ratio",m:"Tỷ lệ doanh số quảng cáo"},{w:"Age-earning profile",m:"Biểu quan hệ thu nhập theo tuổi"},{w:"Agency shop",m:"Nghiệp đoàn"},{w:"Agglomeration economies",m:"Tính kinh tế nhờ kết tụ"},{w:"Aggregate concentration",m:"Sự tập trung gộp"},{w:"Adverse supply shock",m:"Cú sốc cung bất lợi"},{w:"Aggregate demand",m:"Tổng cầu"},{w:"Aggregate income",m:"Tổng thu nhập"},{w:"Aggregate output",m:"Tổng sản lượng"},{w:"Aggregate production function",m:"Hàm sản xuất gộp"},{w:"Aggregate supply",m:"Tổng cung"},{w:"Aggregation problem",m:"Vấn đề về phép gộp"},{w:"Agrarian revolution",m:"Cách mạng nông nghiệp"},{w:"Agricultural earnings",m:"Thu nhập từ nông nghiệp"},{w:"Agricultural exports",m:"Nông sản xuất khẩu"},{w:"Agricultural lag",m:"Độ trễ nông nghiệp"},{w:"Agricultural reform",m:"Cải cách nông nghiệp"},{w:"Agricultural sector",m:"Khu vực nông nghiệp"},{w:"Agricultural subsidies",m:"Trợ cấp nông nghiệp"},{w:"Aid",m:"Viện trợ"},{w:"Alienation",m:"Sự tha hoá"},{w:"Allocate",m:"Phân bổ, ấn định"},{w:"Allocation function",m:"Chức năng phân bổ"},{w:"Allocative efficiency",m:"Hiệu quả phân bổ"},{w:"Almon lag",m:"Độ trễ Almon"},{w:"Alpha coefficient",m:"Hệ số Alpha"},{w:"Altruism",m:"Lòng vị tha"},{w:"Amalgamation",m:"Sự hợp nhất"},{w:"America selling price",m:"Giá bán kiểu Mỹ"},{w:"Amortization",m:"Chi trả từng kỳ"},{w:"Amplitude",m:"Biên độ"},{w:"Analysis of variance",m:"Phân tích phương sai (ANOVA)"},{w:"Anarchy",m:"Tình trạng vô chính phủ"},{w:"Allowance",m:"Phần tiền trợ cấp"},{w:"Anchor argument",m:"Luận điểm về cái neo"},{w:"Animal spirits",m:"Tinh thần bầy đàn"},{w:"Annual allowances",m:"Miễn thuế hàng năm"},{w:"Annual capital charge",m:"Chi phí vốn hàng năm"},{w:"Annuity",m:"Niên kim"},{w:"Annuity market",m:"Thị trường niên kim"},{w:"Anticipated inflation",m:"Lạm phát được dự tính"},{w:"Anti-trust",m:"Chống lũng đoạn"},{w:"Appreciation",m:"Sự tăng giá trị"},{w:"Apprenticeship",m:"Học việc"},{w:"Arbitrage",m:"Kinh doanh chênh lệch giá"},{w:"Arbitration",m:"Trọng tài"},{w:"Arc elasticity",m:"Độ co giãn hình cung"},{w:"ARCH effect",m:"Hiệu ứng ARCH"},{w:"Arithmetic mean",m:"Trung bình số học"},{w:"Asset",m:"Tài sản"},{w:"Asset stripping",m:"Tước đoạt tài sản"},{w:"Assignment problem",m:"Bài toán kết nối"},{w:"Assurance",m:"Bảo hiểm xác định"},{w:"Asymmetric information",m:"Thông tin bất đối xứng"},{w:"Asymptote",m:"Đường tiệm cận"},{w:"Atomistic competition",m:"Cạnh tranh độc lập"},{w:"Attribute",m:"Thuộc tính"},{w:"Auctioneer",m:"Người bán đấu giá"},{w:"Auction markets",m:"Thị trường đấu giá"},{w:"Auctions",m:"Đấu giá"},{w:"Augmented Phillips curve",m:"Đường Phillips bổ sung"},{w:"Austrian school",m:"Trường phái kinh tế Áo"},{w:"Autarky",m:"Tự cung tự cấp"},{w:"Autarky economy",m:"Nền kinh tế tự cung tự cấp"},{w:"Autocorrelation",m:"Sự tự tương quan"},{w:"Automatic stabilizers",m:"Các biện pháp ổn định tự động"},{w:"Automation",m:"Tự động hoá"},{w:"Autonomous expenditure",m:"Chi tiêu tự định"},{w:"Induced expenditure",m:"Chi tiêu phụ thuộc"},{w:"Autoregression",m:"Tự hồi quy"},{w:"Average cost",m:"Chi phí bình quân"},{w:"Average cost pricing",m:"Định giá theo chi phí bình quân"},{w:"Average fixed costs",m:"Chi phí cố định bình quân"},{w:"Average product",m:"Sản phẩm bình quân"},{w:"Average productivity",m:"Năng suất bình quân"},{w:"Average rate of tax",m:"Suất thuế bình quân"},{w:"Average revenue",m:"Doanh thu bình quân"},{w:"Average total cost",m:"Tổng chi phí bình quân"},{w:"Average variable cost",m:"Chi phí khả biến bình quân (AVC)"},{w:"Balanced budget",m:"Ngân sách cân đối"},{w:"Balanced growth",m:"Tăng trưởng cân đối"},{w:"Balance of payment",m:"Cán cân thanh toán"},{w:"Balance of trade",m:"Cán cân thương mại"},{w:"Balance sheet",m:"Bảng cân đối tài sản"},{w:"Bank rate",m:"Lãi suất ngân hàng"},{w:"Bankruptcy",m:"Phá sản"},{w:"Barriers to entry",m:"Rào cản gia nhập thị trường"},{w:"Barter",m:"Hàng đổi hàng"},{w:"Base rate",m:"Lãi suất cơ bản"},{w:"Bear market",m:"Thị trường giá giảm"},{w:"Bond",m:"Trái phiếu"},{w:"Boom",m:"Giai đoạn bùng nổ kinh tế"},{w:"Budget deficit",m:"Thâm hụt ngân sách"},{w:"Budget surplus",m:"Thặng dư ngân sách"},{w:"Bull market",m:"Thị trường giá tăng"},{w:"Business cycle",m:"Chu kỳ kinh doanh"},{w:"Capital",m:"Tư bản, vốn"},{w:"Capital account",m:"Tài khoản vốn"},{w:"Capital formation",m:"Hình thành vốn"},{w:"Capital gains",m:"Lãi vốn"},{w:"Capital goods",m:"Hàng hoá tư bản"},{w:"Capital market",m:"Thị trường vốn"},{w:"Cartel",m:"Tập đoàn cartel"},{w:"Central bank",m:"Ngân hàng trung ương"},{w:"Circular flow",m:"Dòng chảy kinh tế tuần hoàn"},{w:"Classical economics",m:"Kinh tế học cổ điển"},{w:"Collateral",m:"Tài sản thế chấp"},{w:"Collective bargaining",m:"Thương lượng tập thể"},{w:"Command economy",m:"Kinh tế kế hoạch hoá tập trung"},{w:"Commercial bank",m:"Ngân hàng thương mại"},{w:"Commodity",m:"Hàng hoá"},{w:"Comparative advantage",m:"Lợi thế so sánh"},{w:"Competition",m:"Cạnh tranh"},{w:"Consumer price index",m:"Chỉ số giá tiêu dùng (CPI)"},{w:"Consumer surplus",m:"Thặng dư tiêu dùng"},{w:"Consumption",m:"Tiêu dùng"},{w:"Cost-benefit analysis",m:"Phân tích chi phí - lợi ích"},{w:"Credit",m:"Tín dụng"},{w:"Current account",m:"Tài khoản vãng lai"},{w:"Customs duty",m:"Thuế hải quan"},{w:"Debt",m:"Nợ"},{w:"Deflation",m:"Giảm phát"},{w:"Demand",m:"Cầu"},{w:"Demand curve",m:"Đường cầu"},{w:"Depreciation",m:"Khấu hao"},{w:"Depression",m:"Suy thoái kinh tế trầm trọng"},{w:"Devaluation",m:"Phá giá đồng tiền"},{w:"Dividend",m:"Cổ tức"},{w:"Duopoly",m:"Thị trường song độc quyền"},{w:"Economic growth",m:"Tăng trưởng kinh tế"},{w:"Economies of scale",m:"Tính kinh tế theo quy mô"},{w:"Elasticity",m:"Độ co giãn"},{w:"Employment",m:"Việc làm"},{w:"Equilibrium",m:"Cân bằng"},{w:"Exchange rate",m:"Tỷ giá hối đoái"},{w:"Excise duty",m:"Thuế tiêu thụ đặc biệt"},{w:"Externality",m:"Ngoại ứng"},{w:"Fiscal policy",m:"Chính sách tài khoá"},{w:"Fixed costs",m:"Chi phí cố định"},{w:"Foreign direct investment",m:"Đầu tư trực tiếp nước ngoài (FDI)"},{w:"Free market",m:"Thị trường tự do"},{w:"Free trade",m:"Tự do thương mại"},{w:"GDP (Gross Domestic Product)",m:"Tổng sản phẩm quốc nội"},{w:"GNP (Gross National Product)",m:"Tổng sản phẩm quốc dân"},{w:"Hyperinflation",m:"Siêu lạm phát"},{w:"Import",m:"Nhập khẩu"},{w:"Income",m:"Thu nhập"},{w:"Inflation",m:"Lạm phát"},{w:"Interest rate",m:"Lãi suất"},{w:"Investment",m:"Đầu tư"},{w:"Labour market",m:"Thị trường lao động"},{w:"Macroeconomics",m:"Kinh tế vĩ mô"},{w:"Marginal cost",m:"Chi phí cận biên"},{w:"Market failure",m:"Thất bại thị trường"},{w:"Microeconomics",m:"Kinh tế vi mô"},{w:"Monetary policy",m:"Chính sách tiền tệ"},{w:"Monopoly",m:"Độc quyền"},{w:"Multiplier effect",m:"Hiệu ứng số nhân"},{w:"National debt",m:"Nợ quốc gia"},{w:"Nationalisation",m:"Quốc hữu hoá"},{w:"Oligopoly",m:"Thị trường độc quyền nhóm"},{w:"Opportunity cost",m:"Chi phí cơ hội"},{w:"Price elasticity",m:"Co giãn giá"},{w:"Privatisation",m:"Tư nhân hoá"},{w:"Producer surplus",m:"Thặng dư sản xuất"},{w:"Profit",m:"Lợi nhuận"},{w:"Progressive tax",m:"Thuế luỹ tiến"},{w:"Public goods",m:"Hàng hoá công cộng"},{w:"Quantitative easing",m:"Nới lỏng định lượng"},{w:"Quota",m:"Hạn ngạch"},{w:"Recession",m:"Suy thoái kinh tế"},{w:"Rent",m:"Địa tô, tiền thuê"},{w:"Revenue",m:"Doanh thu"},{w:"Savings",m:"Tiết kiệm"},{w:"Stagflation",m:"Đình lạm"},{w:"Stock market",m:"Thị trường chứng khoán"},{w:"Subsidy",m:"Trợ cấp"},{w:"Supply",m:"Cung"},{w:"Supply curve",m:"Đường cung"},{w:"Tariff",m:"Thuế quan"},{w:"Tax",m:"Thuế"},{w:"Trade deficit",m:"Thâm hụt thương mại"},{w:"Unemployment",m:"Thất nghiệp"},{w:"Variable costs",m:"Chi phí biến đổi"},{w:"Wage",m:"Tiền lương"},{w:"Welfare economics",m:"Kinh tế học phúc lợi"}
+];
 
-    let latestAIFeedbackText = "";
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentIdx = 0;
+let log = JSON.parse(localStorage.getItem('econvocab_log') || '[]');
+let teacherNotes = localStorage.getItem('econvocab_notes') || '';
+let practisedWords = new Set(JSON.parse(localStorage.getItem('econvocab_practiced') || '[]'));
+let currentScore = null;
+let currentHeard = '';
+let recognition = null;
+let isListening = false;
+let quizCorrect = 0, quizWrong = 0;
+let currentTab = 'speak';
 
-    function loadVocab() {
-        const u = document.getElementById('unitSelect').value;
-        const s = document.getElementById('wordSelect');
-        s.innerHTML = vocabulary[u] ? vocabulary[u].map(w => `<option value="${w}">${w}</option>`).join('') : "";
-        updateTarget();
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+function init() {
+  populateSelect();
+  updateWordDisplay();
+  renderLog();
+  updateStats();
+  renderWordListMini();
+  document.getElementById('teacherNotes').value = teacherNotes;
+  newQuiz();
+  initSpeechRecognition();
+}
+
+function populateSelect() {
+  const sel = document.getElementById('wordSelect');
+  VOCAB.forEach((v, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${i+1}. ${v.w}`;
+    sel.appendChild(opt);
+  });
+  sel.value = currentIdx;
+}
+
+function selectWord(idx) {
+  currentIdx = parseInt(idx);
+  updateWordDisplay();
+  resetSpeak();
+}
+
+function updateWordDisplay() {
+  const v = VOCAB[currentIdx];
+  document.getElementById('wordEn').textContent = v.w;
+  document.getElementById('wordVi').textContent = v.m;
+  document.getElementById('wordPhonetic').textContent = getPhonetic(v.w);
+  document.getElementById('wordCounter').textContent = `${currentIdx+1} / ${VOCAB.length}`;
+  document.getElementById('wordSelect').value = currentIdx;
+  // flashcard
+  document.getElementById('flashWord').textContent = v.w;
+  document.getElementById('flashMeaning').textContent = v.m;
+}
+
+function getPhonetic(word) {
+  // Simple heuristic phonetic hints for common economics terms
+  return '/' + word.toLowerCase().replace(/tion/g,'ʃən').replace(/ment/g,'mənt').replace(/tion/g,'ʃn').replace(/ing/g,'ɪŋ').replace(/ity/g,'ɪti').replace(/ous/g,'əs').replace(/age/g,'ɪdʒ').slice(0,20) + '.../';
+}
+
+function prevWord() { currentIdx = (currentIdx - 1 + VOCAB.length) % VOCAB.length; updateWordDisplay(); resetSpeak(); }
+function nextWord() { currentIdx = (currentIdx + 1) % VOCAB.length; updateWordDisplay(); resetSpeak(); }
+function randomWord() { currentIdx = Math.floor(Math.random() * VOCAB.length); updateWordDisplay(); resetSpeak(); }
+
+// ─────────────────────────────────────────────
+// SPEECH SYNTHESIS
+// ─────────────────────────────────────────────
+function listenWord() {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(VOCAB[currentIdx].w);
+  utter.lang = 'en-US';
+  utter.rate = 0.85;
+  utter.pitch = 1;
+  speechSynthesis.speak(utter);
+}
+
+// ─────────────────────────────────────────────
+// SPEECH RECOGNITION
+// ─────────────────────────────────────────────
+function initSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('speakSub').textContent = 'Trình duyệt không hỗ trợ nhận diện giọng nói. Dùng Chrome!';
+    return;
+  }
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 3;
+
+  recognition.onstart = () => {
+    isListening = true;
+    document.getElementById('micBtn').classList.add('listening');
+    document.getElementById('speakLabel').textContent = 'ĐANG NGHE...';
+    document.getElementById('speakSub').textContent = 'Đọc từ tiếng Anh phía trên...';
+    document.getElementById('heardBox').style.display = 'block';
+    document.getElementById('heardText').textContent = '🎙️ Đang ghi âm...';
+  };
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
+        currentHeard = t.trim();
+        processResult(currentHeard, e.results[i]);
+      } else interim = t;
     }
+    if (!currentHeard) document.getElementById('heardText').textContent = interim || '...';
+  };
 
-    function updateTarget() {
-        let selectedText = document.getElementById('wordSelect').value || "Vui lòng chọn bài học...";
-        selectedText = selectedText.replace(/\[TỪ\] |\[CÂU\] /g, "");
-        document.getElementById('wordDisplay').innerText = selectedText;
-        resetScore();
-    }
+  recognition.onerror = (e) => {
+    stopListening();
+    if (e.error === 'no-speech') showNotif('Không nghe thấy giọng nói. Hãy nói to hơn!');
+    else if (e.error === 'not-allowed') showNotif('Cần cho phép truy cập microphone!');
+  };
 
-    function resetScore() {
-        document.getElementById('scoreVal').innerText = "--";
-        document.getElementById('scoreVal').style.color = "#a0aec0";
-        document.getElementById('heardTxt').innerHTML = "---";
-        document.getElementById('btnSave').disabled = true;
-        document.getElementById('saveHint').style.display = "block";
-        document.getElementById('aiFeedback').style.display = "none";
-        latestAIFeedbackText = "";
-    }
+  recognition.onend = () => { stopListening(); };
+}
 
-    // AI Analysis Engine
-    function cleanWord(word) {
-        return word.toLowerCase().replace(/[.,!?]/g, '').trim();
-    }
+function toggleListen() {
+  if (!recognition) { showNotif('Cần dùng Chrome để nhận diện giọng nói!'); return; }
+  if (isListening) { recognition.stop(); }
+  else { currentHeard = ''; currentScore = null; resetSpeak(); recognition.start(); }
+}
 
-    function analyzePronunciation(targetStr, transcriptStr) {
-        const targetWords = targetStr.split(/\s+/).map(cleanWord).filter(w => w);
-        const transcriptWords = transcriptStr.split(/\s+/).map(cleanWord).filter(w => w);
-        
-        let suggestions = [];
-        let highlightedTranscript = [];
-        let matchCount = 0;
+function stopListening() {
+  isListening = false;
+  document.getElementById('micBtn').classList.remove('listening');
+  document.getElementById('speakLabel').textContent = 'CHẠM ĐỂ NÓI';
+  document.getElementById('speakSub').textContent = 'Bấm mic rồi đọc từ tiếng Anh phía trên';
+}
 
-        targetWords.forEach((targetWord, index) => {
-            const spokenWord = transcriptWords[index] || "";
-            if (targetWord === spokenWord) {
-                highlightedTranscript.push(`<span class="word-correct">${spokenWord}</span>`);
-                matchCount++;
-            } else {
-                let pushed = false;
-                // Phát hiện thiếu s/es/ed
-                if ((targetWord.endsWith('s') || targetWord.endsWith('es')) && targetWord.includes(spokenWord) && spokenWord !== "") {
-                    suggestions.push(`🔴 Thiếu âm đuôi: <b>"${targetWord}"</b> (bạn thiếu 's/es').`);
-                    highlightedTranscript.push(`<span class="word-wrong">${spokenWord || "..."}</span>`);
-                    pushed = true;
-                } else if (targetWord.endsWith('ed') && targetWord.includes(spokenWord) && spokenWord !== "") {
-                    suggestions.push(`🔴 Thiếu âm đuôi: <b>"${targetWord}"</b> (bạn thiếu 'ed').`);
-                    highlightedTranscript.push(`<span class="word-wrong">${spokenWord || "..."}</span>`);
-                    pushed = true;
-                }
-                
-                if (!pushed) {
-                    if (!spokenWord) {
-                        suggestions.push(`🔴 Thiếu từ: Bạn chưa đọc từ <b>"${targetWord}"</b>.`);
-                    } else {
-                        suggestions.push(`🔴 Sai âm: <b>"${targetWord}"</b> đọc thành "${spokenWord}".`);
-                        highlightedTranscript.push(`<span class="word-wrong">${spokenWord}</span>`);
-                    }
-                }
-            }
+function processResult(heard, result) {
+  const target = VOCAB[currentIdx].w.toLowerCase();
+  
+  // Check all alternatives
+  let bestScore = 0;
+  for (let i = 0; i < result.length; i++) {
+    const alt = result[i].transcript.toLowerCase().trim();
+    const s = similarity(alt, target);
+    if (s > bestScore) bestScore = s;
+  }
+  
+  const score = Math.round(bestScore * 100);
+  currentScore = score;
+  
+  document.getElementById('heardText').textContent = `"${heard}"`;
+  document.getElementById('scoreSection').style.display = 'flex';
+  document.getElementById('aiComment').style.display = 'block';
+  document.getElementById('btnSave').disabled = false;
+  
+  animateRing(score);
+  showAIComment(score, heard, target);
+  updateSessionStats(score);
+  
+  practisedWords.add(currentIdx);
+  localStorage.setItem('econvocab_practiced', JSON.stringify([...practisedWords]));
+  updateStats();
+  renderWordListMini();
+}
+
+function animateRing(score) {
+  const ring = document.getElementById('ring1');
+  const val = document.getElementById('scoreVal');
+  const circumference = 2 * Math.PI * 37; // 232.5
+  const offset = circumference - (score / 100) * circumference;
+  
+  ring.style.strokeDashoffset = offset;
+  ring.className = 'fill' + (score >= 80 ? ' good' : score >= 50 ? ' ok' : '');
+  val.textContent = score + '%';
+  val.style.color = score >= 80 ? 'var(--green)' : score >= 50 ? 'var(--yellow)' : 'var(--red)';
+}
+
+function showAIComment(score, heard, target) {
+  let comment = '';
+  const word = VOCAB[currentIdx].w;
+  
+  if (score === 100) {
+    comment = `✅ Xuất sắc! Phát âm "${word}" hoàn toàn chính xác. GV Bằng: Em phát âm rất chuẩn, tiếp tục phát huy nhé!`;
+  } else if (score >= 80) {
+    comment = `👍 Tốt lắm! AI nhận diện được "${heard}". Gần đúng với "${word}". GV Bằng: Chú ý thêm âm cuối và trọng âm.`;
+  } else if (score >= 60) {
+    comment = `⚡ Khá! AI nghe "${heard}" thay vì "${word}". GV Bằng: Hãy nghe lại mẫu và chú ý từng âm tiết.`;
+  } else if (score >= 30) {
+    comment = `🔄 Cần cải thiện. AI nghe "${heard}" nhưng từ đúng là "${word}". GV Bằng: Nghe kỹ phát âm mẫu, luyện từng âm một.`;
+  } else {
+    comment = `❌ Chưa đúng. AI nghe "${heard}" thay vì "${word}". GV Bằng: Em cần luyện phát âm nhiều hơn, bấm 🔊 để nghe trước.`;
+  }
+  
+  document.getElementById('aiCommentText').textContent = comment;
+}
+
+function resetSpeak() {
+  currentScore = null;
+  currentHeard = '';
+  document.getElementById('heardBox').style.display = 'none';
+  document.getElementById('scoreSection').style.display = 'none';
+  document.getElementById('aiComment').style.display = 'none';
+  document.getElementById('btnSave').disabled = true;
+}
+
+// ─────────────────────────────────────────────
+// SIMILARITY (Levenshtein-based)
+// ─────────────────────────────────────────────
+function similarity(a, b) {
+  a = a.replace(/[^a-z\s]/gi, '').trim().toLowerCase();
+  b = b.replace(/[^a-z\s]/gi, '').trim().toLowerCase();
+  if (a === b) return 1;
+  if (!a || !b) return 0;
+  
+  // Word-level check first
+  const wa = a.split(/\s+/);
+  const wb = b.split(/\s+/);
+  let wordMatch = 0;
+  wb.forEach(w => { if (wa.includes(w)) wordMatch++; });
+  const wordScore = wordMatch / Math.max(wa.length, wb.length);
+  
+  // Character level Levenshtein
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m+1}, (_,i) => Array.from({length: n+1}, (_,j) => j === 0 ? i : i === 0 ? j : 0));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++) dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  const charScore = 1 - dp[m][n] / Math.max(m, n);
+  
+  return Math.max(wordScore, charScore * 0.9);
+}
+
+// ─────────────────────────────────────────────
+// LOG
+// ─────────────────────────────────────────────
+function saveRecord() {
+  if (currentScore === null) return;
+  const name = document.getElementById('studentName').value.trim() || 'Ẩn danh';
+  const note = document.getElementById('teacherNotes').value.trim();
+  const rec = {
+    name, word: VOCAB[currentIdx].w, score: currentScore,
+    heard: currentHeard, comment: document.getElementById('aiCommentText').textContent,
+    teacherNote: note, ts: Date.now()
+  };
+  log.unshift(rec);
+  localStorage.setItem('econvocab_log', JSON.stringify(log));
+  renderLog();
+  updateStats();
+  showNotif(`✅ Đã lưu kết quả "${VOCAB[currentIdx].w}" – ${currentScore}%`);
+  document.getElementById('btnSave').disabled = true;
+}
+
+function renderLog() {
+  const nameFilter = document.getElementById('filterName').value.toLowerCase();
+  const scoreFilter = document.getElementById('filterScore').value;
+  
+  let filtered = log.filter(r => {
+    if (nameFilter && !r.name.toLowerCase().includes(nameFilter)) return false;
+    if (scoreFilter === '100' && r.score !== 100) return false;
+    if (scoreFilter === '60' && r.score < 60) return false;
+    if (scoreFilter === 'low' && r.score >= 60) return false;
+    return true;
+  });
+  
+  const tbody = document.getElementById('logBody');
+  const empty = document.getElementById('emptyLog');
+  tbody.innerHTML = '';
+  
+  if (filtered.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  
+  filtered.forEach(r => {
+    const tr = document.createElement('tr');
+    const d = new Date(r.ts);
+    const ts = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}\n${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+    const pillClass = r.score === 100 ? 'score-great' : r.score >= 60 ? 'score-ok' : 'score-low';
+    const dot = r.score === 100 ? 'dot-green' : r.score >= 60 ? 'dot-yellow' : 'dot-red';
+    const shortComment = r.comment.length > 80 ? r.comment.slice(0,80) + '...' : r.comment;
+    tr.innerHTML = `
+      <td><strong>${r.name}</strong></td>
+      <td><span class="dot ${dot}"></span>${r.word}</td>
+      <td><span class="score-pill ${pillClass}">${r.score}%</span></td>
+      <td class="td-comment" title="${r.comment}">${shortComment}</td>
+      <td style="white-space:pre; font-size:.78rem; color:var(--muted);">${ts}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function clearLog() {
+  if (!confirm('Xóa toàn bộ nhật ký luyện tập?')) return;
+  log = [];
+  practisedWords.clear();
+  localStorage.removeItem('econvocab_log');
+  localStorage.removeItem('econvocab_practiced');
+  renderLog();
+  updateStats();
+  renderWordListMini();
+  resetSessionStats();
+  showNotif('🗑️ Đã xóa toàn bộ dữ liệu');
+}
+
+function exportCSV() {
+  if (log.length === 0) { showNotif('Chưa có dữ liệu để xuất!'); return; }
+  const rows = [['Học Sinh','Từ Vựng','Điểm AI (%)','AI Nghe','Nhận Xét AI & GV','Ghi Chú GV','Thời Gian']];
+  log.forEach(r => {
+    const d = new Date(r.ts);
+    rows.push([r.name, r.word, r.score, r.heard, r.comment.replace(/,/g,';'), r.teacherNote.replace(/,/g,';'), d.toLocaleString('vi-VN')]);
+  });
+  const csv = '\uFEFF' + rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `EconVocab_GV_Bang_${new Date().toLocaleDateString('vi-VN').replace(/\//g,'-')}.csv`;
+  a.click();
+  showNotif('📥 Đang tải file CSV...');
+}
+
+// ─────────────────────────────────────────────
+// STATS
+// ─────────────────────────────────────────────
+let sessionScores = [];
+
+function updateSessionStats(score) {
+  sessionScores.push(score);
+  const total = sessionScores.length;
+  const avg = Math.round(sessionScores.reduce((a,b)=>a+b,0)/total);
+  const correct = sessionScores.filter(s=>s>=80).length;
+  const below = sessionScores.filter(s=>s<60).length;
+  document.getElementById('sessionCorrect').textContent = sessionScores.filter(s=>s===100).length;
+  document.getElementById('sessionTotal').textContent = total;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statAvg').textContent = avg + '%';
+  document.getElementById('stat100').textContent = correct;
+  document.getElementById('statBelow').textContent = below;
+}
+
+function resetSessionStats() {
+  sessionScores = [];
+  document.getElementById('sessionCorrect').textContent = 0;
+  document.getElementById('sessionTotal').textContent = 0;
+  document.getElementById('statTotal').textContent = 0;
+  document.getElementById('statAvg').textContent = '—';
+  document.getElementById('stat100').textContent = 0;
+  document.getElementById('statBelow').textContent = 0;
+}
+
+function updateStats() {
+  const count = practisedWords.size;
+  document.getElementById('practicedCount').textContent = count;
+  const pct = Math.round(count / VOCAB.length * 100);
+  if (count > 0) {
+    document.getElementById('progressWrap').style.display = 'block';
+    document.getElementById('pbFill').style.width = pct + '%';
+    document.getElementById('pbLabel').textContent = `Đã luyện ${count} từ`;
+    document.getElementById('pbPct').textContent = pct + '%';
+  }
+}
+
+// ─────────────────────────────────────────────
+// WORD LIST MINI
+// ─────────────────────────────────────────────
+function renderWordListMini() {
+  const container = document.getElementById('wordListMini');
+  container.innerHTML = '';
+  VOCAB.slice(0, 60).forEach((v, i) => {
+    const tag = document.createElement('span');
+    tag.textContent = v.w;
+    tag.title = v.m;
+    tag.style.cssText = `padding:4px 10px; border-radius:20px; font-size:.72rem; font-weight:600; cursor:pointer; border:1.5px solid; transition:all .15s;
+      background:${practisedWords.has(i) ? '#D1FAE5' : '#F9FAFB'};
+      color:${practisedWords.has(i) ? '#065F46' : '#374151'};
+      border-color:${practisedWords.has(i) ? '#6EE7B7' : '#E5E7EB'};`;
+    tag.onclick = () => { currentIdx = i; updateWordDisplay(); resetSpeak(); switchTab('speak'); };
+    container.appendChild(tag);
+  });
+  const more = document.createElement('span');
+  more.textContent = `+${VOCAB.length - 60} từ nữa...`;
+  more.style.cssText = 'font-size:.72rem; color:var(--muted); padding:4px 8px; font-style:italic;';
+  container.appendChild(more);
+}
+
+// ─────────────────────────────────────────────
+// TEACHER NOTES
+// ─────────────────────────────────────────────
+function saveNote() {
+  teacherNotes = document.getElementById('teacherNotes').value;
+  localStorage.setItem('econvocab_notes', teacherNotes);
+  showNotif('💾 Đã lưu ghi chú của GV Bằng');
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  ['speak','flash','quiz'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((el, i) => {
+    el.classList.toggle('active', ['speak','flash','quiz'][i] === tab);
+  });
+  if (tab === 'flash') showFlash();
+  if (tab === 'quiz') newQuiz();
+}
+
+// ─────────────────────────────────────────────
+// FLASHCARD
+// ─────────────────────────────────────────────
+let flashFlipped = false;
+function showFlash() {
+  flashFlipped = false;
+  const v = VOCAB[currentIdx];
+  document.getElementById('flashSide').textContent = 'TIẾNG ANH';
+  document.getElementById('flashWord').textContent = v.w;
+  document.getElementById('flashWord').style.display = 'block';
+  document.getElementById('flashMeaning').style.display = 'none';
+}
+function flipCard() {
+  flashFlipped = !flashFlipped;
+  const v = VOCAB[currentIdx];
+  if (flashFlipped) {
+    document.getElementById('flashSide').textContent = 'TIẾNG VIỆT';
+    document.getElementById('flashWord').style.display = 'none';
+    document.getElementById('flashMeaning').textContent = v.m;
+    document.getElementById('flashMeaning').style.display = 'block';
+  } else {
+    document.getElementById('flashSide').textContent = 'TIẾNG ANH';
+    document.getElementById('flashWord').style.display = 'block';
+    document.getElementById('flashMeaning').style.display = 'none';
+  }
+}
+
+// ─────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────
+let quizIdx = 0;
+function newQuiz() {
+  quizIdx = Math.floor(Math.random() * VOCAB.length);
+  const correct = VOCAB[quizIdx];
+  const options = [correct];
+  while (options.length < 4) {
+    const r = VOCAB[Math.floor(Math.random() * VOCAB.length)];
+    if (!options.find(o => o.w === r.w)) options.push(r);
+  }
+  options.sort(() => Math.random() - .5);
+  
+  document.getElementById('quizWord').textContent = correct.w;
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizFeedback').style.color = '';
+  const container = document.getElementById('quizOptions');
+  container.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.m;
+    btn.style.cssText = 'padding:12px 16px; border:2px solid var(--border); border-radius:10px; background:#fff; font-family:inherit; font-size:.88rem; cursor:pointer; text-align:left; transition:all .2s; color:var(--text); font-weight:500;';
+    btn.onmouseover = () => { if (!btn.disabled) btn.style.borderColor = 'var(--red)'; btn.style.background = '#FFF5F6'; };
+    btn.onmouseout = () => { if (!btn.disabled) btn.style.borderColor = 'var(--border)'; btn.style.background = '#fff'; };
+    btn.onclick = () => {
+      document.querySelectorAll('#quizOptions button').forEach(b => b.disabled = true);
+      if (opt.w === correct.w) {
+        btn.style.background = '#D1FAE5'; btn.style.borderColor = 'var(--green)';
+        document.getElementById('quizFeedback').textContent = '🎉 Chính xác! GV Bằng: Tuyệt vời!';
+        document.getElementById('quizFeedback').style.color = 'var(--green)';
+        quizCorrect++;
+      } else {
+        btn.style.background = '#FEE2E5'; btn.style.borderColor = 'var(--red)';
+        document.getElementById('quizFeedback').textContent = `❌ Sai! Đáp án đúng: "${correct.m}"`;
+        document.getElementById('quizFeedback').style.color = 'var(--red)';
+        quizWrong++;
+        // highlight correct
+        document.querySelectorAll('#quizOptions button').forEach(b => {
+          if (b.textContent === correct.m) { b.style.background = '#D1FAE5'; b.style.borderColor = 'var(--green)'; }
         });
-
-        return {
-            htmlTranscript: highlightedTranscript.join(' '),
-            suggestions: suggestions,
-            matchRatio: targetWords.length > 0 ? (matchCount / targetWords.length) : 0
-        };
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-
-    document.getElementById('btnMic').onclick = () => {
-        try {
-            recognition.start();
-            document.getElementById('btnMic').innerText = "🎧 ĐANG NGHE...";
-            document.getElementById('btnMic').classList.add('listening');
-        } catch(e) { console.log(e); }
+      }
+      document.getElementById('quizCorrect').textContent = quizCorrect;
+      document.getElementById('quizWrong').textContent = quizWrong;
     };
+    container.appendChild(btn);
+  });
+}
 
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const targetText = document.getElementById('wordDisplay').innerText;
-        const analysis = analyzePronunciation(targetText, transcript);
+// ─────────────────────────────────────────────
+// NOTIFICATION
+// ─────────────────────────────────────────────
+let notifTimer = null;
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (notifTimer) clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
 
-        document.getElementById('heardTxt').innerHTML = analysis.htmlTranscript || transcript;
-        
-        let score = Math.round(analysis.matchRatio * 100);
-        if (score < 30 && transcript !== "") score = 45; // Khuyến khích
-
-        const scoreVal = document.getElementById('scoreVal');
-        scoreVal.innerText = score;
-        scoreVal.style.color = score >= 80 ? "#38a169" : (score >= 60 ? "#dd6b20" : "#e53e3e");
-
-        const feedbackBox = document.getElementById('aiFeedback');
-        feedbackBox.style.display = "block";
-        const list = document.getElementById('aiSuggestionList');
-        
-        if (analysis.suggestions.length === 0 && score > 90) {
-            list.innerHTML = "<li>🌟 Tuyệt vời! Bạn phát âm chuẩn xác hoàn toàn.</li>";
-            latestAIFeedbackText = "AI: Chuẩn xác.";
-        } else {
-            list.innerHTML = analysis.suggestions.map(s => `<li>${s}</li>`).join('');
-            latestAIFeedbackText = "AI: " + analysis.suggestions.map(s => s.replace(/<[^>]*>?/gm, '')).join(' | ');
-        }
-
-        document.getElementById('btnSave').disabled = false;
-        document.getElementById('saveHint').style.display = "none";
-        document.getElementById('btnMic').innerText = "🔴 THỬ LẠI LẦN NỮA";
-        document.getElementById('btnMic').classList.remove('listening');
-    };
-
-    let logs = JSON.parse(localStorage.getItem('inspire_pro_red_logs')) || [];
-
-    function saveData() {
-        const entry = {
-            name: document.getElementById('studentName').value,
-            lesson: document.getElementById('wordDisplay').innerText,
-            score: document.getElementById('scoreVal').innerText + "%",
-            note: latestAIFeedbackText + " | GV: " + document.getElementById('teacherNote').value,
-            time: new Date().toLocaleString('vi-VN')
-        };
-        logs.unshift(entry);
-        localStorage.setItem('inspire_pro_red_logs', JSON.stringify(logs));
-        renderTable();
-        alert("Đã lưu kết quả của " + entry.name);
-        
-        // --- TÍNH NĂNG MỚI: Tự động làm mới trang ---
-        window.location.reload(); 
-    }
-
-    function renderTable() {
-        document.getElementById('logBody').innerHTML = logs.map(l => `
-            <tr>
-                <td><b>${l.name}</b></td>
-                <td>${l.lesson}</td>
-                <td>${l.score}</td>
-                <td><small>${l.note}</small></td>
-                <td>${l.time}</td>
-            </tr>`).join('');
-    }
-
-    function exportData() {
-        const pass = prompt("Nhập mật khẩu để xuất file:");
-        if (pass !== "PHUOCBANG") return alert("Sai mật khẩu!");
-        let csv = "\uFEFFHọc sinh,Nội dung,Điểm,Nhận xét,Thời gian\n";
-        logs.forEach(l => {
-            csv += `"${l.name}","${l.lesson}","${l.score}","${l.note}","${l.time}"\n`;
-        });
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Bao_Cao_Phat_Am_Campath3.csv";
-        link.click();
-        
-        // --- TÍNH NĂNG MỚI: Tự động làm mới trang sau khi tải xuống 1 giây ---
-        setTimeout(() => { window.location.reload(); }, 1000);
-    }
-
-    window.onload = renderTable;
+// ─────────────────────────────────────────────
+// START
+// ─────────────────────────────────────────────
+init();
 </script>
-
 </body>
 </html>
